@@ -1,0 +1,74 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace Game
+{
+    public partial class Form1 : Form
+    {
+        #region Properties
+        ChessBoardManager chessBoad;
+        SpinCard spinCard;
+        #endregion
+
+
+        public Form1()
+        {
+            InitializeComponent();
+            chessBoad = new ChessBoardManager(pnlChessBoard);
+            chessBoad.DrawChessBoard();
+
+            spinCard = new SpinCard();
+            spinCard.addCard();
+
+            bntSpin.MouseClick +=  clickButtonSpin;
+            
+        }
+
+        private void clickButtonSpin(object sender, EventArgs e)
+        {
+            bntSpin.Enabled = false;
+            pctbSpin.SizeMode = PictureBoxSizeMode.StretchImage;
+            pctbSpin.Image = Game.Properties.Resources.hideCard;
+
+            thread = new Thread(randomCard);
+            thread.Start();
+            Thread.Sleep(2000);
+            if (!bntSpin.Enabled)
+                bntSpin.Enabled = true;
+        }
+
+        public void randomCard()
+        {
+            pctbSpin.SizeMode = PictureBoxSizeMode.StretchImage;
+            pctbSpin.Image = spinCard.spinCard();
+
+            if (pctbSpin.Image == Game.Properties.Resources.RedCardDown)
+            {
+                txbSpinCard.Text = "Rùa đỏ lùi 1 bước!";
+            }
+            else if (pctbSpin.Image == Game.Properties.Resources.RedCardDown2)
+            {
+                txbSpinCard.Text = "Rùa đỏ lùi 2 bước!";
+            }
+            else if (pctbSpin.Image == Game.Properties.Resources.RedCardUp)
+            {
+                txbSpinCard.Text = "Rùa đỏ tiến 1 bước!";
+            }
+            else if (pctbSpin.Image == Game.Properties.Resources.RedCardUp2)
+            {
+                txbSpinCard.Text = "Rùa đỏ tiến 2 bước!";
+            }
+        }
+
+
+        public Thread thread { get; set; }
+    }
+}
